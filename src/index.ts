@@ -3,6 +3,7 @@ import { configDotenv } from "dotenv";
 import express = require("express");
 import morgan from "morgan";
 import { AppDataSource } from "./db";
+import { hallRouter } from "./routers/hall.router";
 
 
 const app = express();
@@ -21,6 +22,9 @@ AppDataSource.initialize().then(() => {
 }).catch((e) => {
     console.log(e);
 })
+
+
+app.use("/api/hall",hallRouter);
 
 
 app.get("/",async (req,res) => {
