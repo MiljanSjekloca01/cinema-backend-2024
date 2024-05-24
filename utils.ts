@@ -1,5 +1,6 @@
 export function checkIfDefined(data: any): any{
-    if(!data) throw new Error("NOT_FOUND")
+    console.log(data)
+    if(!data || data.length === 0 || Object.keys(data).length === 0) throw new Error("NOT_FOUND")
     else{
         delete data.deletedAt
         return data;

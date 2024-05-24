@@ -6,14 +6,14 @@ import { HallModel } from "../models/hall.model";
 
 
 const repo = AppDataSource.getRepository(Hall)
-const allCinemaHallField = { hallId: true, name: true, capacity: true, createdAt: true, updatedAt: true, }
+const allCinemaHallFields = { hallId: true, name: true, capacity: true, projectionType: true ,createdAt: true, updatedAt: true, projections: true}
 
 
 export class HallService {
 
     static async getAllHalls(){
         return await repo.find({
-            select: allCinemaHallField,
+            select: allCinemaHallFields,
             where:{
                 deletedAt: IsNull()
             }
@@ -22,7 +22,7 @@ export class HallService {
 
     static async getHallById(id:number): Promise<Hall>{
         const data = await repo.findOne({
-            select:{ hallId: true, name: true, capacity: true, createdAt: true, updatedAt: true, },
+            select: allCinemaHallFields,
             where:{
                 hallId: id,
                 deletedAt: IsNull()
@@ -34,11 +34,12 @@ export class HallService {
 
     static async createHall(model: HallModel){
 
-        checkIfModelHasData(model,"name","capacity")
+        checkIfModelHasData(model,"name","capacity","projectionType")
 
         const data = await repo.save({
             name: model.name,
             capacity: model.capacity,
+            projectionType: model.projectionType,
             createdAt: new Date()
         })
         delete data.deletedAt;
@@ -47,10 +48,11 @@ export class HallService {
 
     static async updateHallById(id: number,model: HallModel){
         
-        checkIfModelHasData(model,"name","capacity")
+        checkIfModelHasData(model,"name","capacity","projectionType")
         const data = await this.getHallById(id);
         data.name = model.name
         data.capacity = model.capacity
+        data.projectionType = model.projectionType,
         data.updatedAt = new Date()
 
         return await repo.save(data);

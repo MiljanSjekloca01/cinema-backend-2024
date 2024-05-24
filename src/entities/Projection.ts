@@ -1,17 +1,11 @@
-import {
-  Column,
-  Entity,
-  Index,
-  JoinColumn,
-  ManyToOne,
-  PrimaryGeneratedColumn,
-} from "typeorm";
+import { Column, Entity, Index, JoinColumn, ManyToOne, PrimaryGeneratedColumn, } from "typeorm";
 import { Hall } from "./Hall";
 import { Movie } from "./Movie";
 
 @Index("fk_projection_hall_hall_id", ["hallId"], {})
 @Index("fk_projection_movie_movie_id", ["movieId"], {})
 @Entity("projection", { schema: "cinema" })
+
 export class Projection {
   @PrimaryGeneratedColumn({
     type: "int",
@@ -26,8 +20,14 @@ export class Projection {
   @Column("int", { name: "movie_id", unsigned: true })
   movieId: number;
 
-  @Column("datetime", { name: "starts_at" })
-  startsAt: Date;
+  @Column("time", { name: "starts_at" })
+  startsAt: string;
+
+  @Column("time", { name: "ends_at" })
+  endsAt: string;
+
+  @Column("date", { name: "projection_date" })
+  projectionDate: Date;
 
   @Column("datetime", {
     name: "created_at",

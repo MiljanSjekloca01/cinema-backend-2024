@@ -9,8 +9,8 @@ export class Movie {
   @Column("varchar", { name: "title", length: 255 })
   title: string;
 
-  @Column("varchar", { name: "genre", length: 50 })
-  genre: string;
+  @Column("json", { name: "genre"})
+  genre: string[];
 
   @Column("varchar", { name: "release_year", length: 50, default: () => "''" })
   releaseYear: string;
@@ -18,14 +18,17 @@ export class Movie {
   @Column("text", { name: "description" })
   description: string;
 
-  @Column("varchar", { name: "image_url", length: 255 })
-  imageUrl: string;
+  @Column("varchar", { name: "image", length: 255 })
+  image: string;
 
-  @Column("varchar", { name: "main_actors", length: 255 })
-  mainActors: string;
+  @Column("json", { name: "main_actors" })
+  mainActors: string[];
 
   @Column("int", { name: "duration" })
   duration: number;
+
+  @Column("date", { name: "starts_showing" })
+  startsShowing: Date;
 
   @Column("datetime", {
     name: "created_at",

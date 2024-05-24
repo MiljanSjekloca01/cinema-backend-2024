@@ -4,6 +4,8 @@ import express = require("express");
 import morgan from "morgan";
 import { AppDataSource } from "./db";
 import { hallRouter } from "./routers/hall.router";
+import { movieRouter } from "./routers/movie.router";
+import { projectionRouter } from "./routers/projection.router";
 
 
 const app = express();
@@ -19,13 +21,15 @@ AppDataSource.initialize().then(() => {
     app.listen(port, () => {
         console.log("App started and listening on port " + port)
     })
-}).catch((e) => {
-    console.log(e);
-})
+}).catch((e) => { console.log(e); })
+
+
 
 
 app.use("/api/hall",hallRouter);
-
+app.use("/api/movie",movieRouter);
+app.use("/api/projection",projectionRouter)
+app.use("/favicon.ico", async (req,res) => { res.json("No icon") })
 
 app.get("/",async (req,res) => {
     res.json("Backend running");

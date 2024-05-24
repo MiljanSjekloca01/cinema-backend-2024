@@ -1,6 +1,11 @@
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { Projection } from "./Projection";
 
+export enum ProjectionType {
+  TwoD = "2D",
+  ThreeD = "3D",
+}
+
 @Entity("hall", { schema: "cinema" })
 export class Hall {
   @PrimaryGeneratedColumn({ type: "int", name: "hall_id", unsigned: true })
@@ -11,6 +16,9 @@ export class Hall {
 
   @Column("int", { name: "capacity", unsigned: true })
   capacity: number;
+
+  @Column('enum', { name: 'projection_type', enum: ProjectionType, default: ProjectionType.TwoD })
+  projectionType: ProjectionType
 
   @Column("datetime", {
     name: "created_at",
