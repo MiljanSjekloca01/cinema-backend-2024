@@ -1,4 +1,4 @@
-import { IsNull } from "typeorm";
+import { IsNull, LessThanOrEqual, MoreThan, MoreThanOrEqual } from "typeorm";
 import { AppDataSource } from "../db";
 import { Movie } from "../entities/Movie";
 import { MovieModel } from "../models/movie.model";
@@ -23,10 +23,23 @@ const allMovieFields = {
 export class MovieService{
 
 
-    static async getAllMovies(){
+    static async getCurrentlyShowingMovies(){
         return await repo.find({
             select:{ movieId: true, title: true, image: true,startsShowing: true },
-            where: { deletedAt: IsNull() }
+            where: { 
+                startsShowing: LessThanOrEqual(new Date()),
+                deletedAt: IsNull() 
+            }
+        })
+    }
+
+    static async getAllComingUpMovies(){
+        return await repo.find({
+            select:{ movieId: true, title: true, image: true,startsShowing: true },
+            where: { 
+                startsShowing: MoreThan(new Date()),
+                deletedAt: IsNull() 
+            }
         })
     }
 

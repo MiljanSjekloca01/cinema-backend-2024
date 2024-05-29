@@ -6,6 +6,8 @@ import { AppDataSource } from "./db";
 import { hallRouter } from "./routers/hall.router";
 import { movieRouter } from "./routers/movie.router";
 import { projectionRouter } from "./routers/projection.router";
+import { adminRouter } from "./routers/admin.router";
+import { authenticateToken } from "../utils";
 
 
 const app = express();
@@ -25,10 +27,11 @@ AppDataSource.initialize().then(() => {
 
 
 
-
+app.use(authenticateToken)
 app.use("/api/hall",hallRouter);
 app.use("/api/movie",movieRouter);
 app.use("/api/projection",projectionRouter)
+app.use("/api/admin",adminRouter)
 app.use("/favicon.ico", async (req,res) => { res.json("No icon") })
 
 app.get("/",async (req,res) => {

@@ -5,8 +5,12 @@ import asyncHandler from "express-async-handler"
 export const movieRouter = Router()
 
 
-movieRouter.get("/",asyncHandler(
-    async (req,res) => { res.json(await MovieService.getAllMovies()) }
+movieRouter.get("/currently-showing",asyncHandler(
+    async (req,res) => { res.json(await MovieService.getCurrentlyShowingMovies()) }
+))
+
+movieRouter.get("/coming-soon",asyncHandler(
+    async (req,res) => { res.json(await MovieService.getAllComingUpMovies()) }
 ))
 
 movieRouter.get("/all",asyncHandler(
