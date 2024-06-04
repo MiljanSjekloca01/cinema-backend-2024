@@ -10,6 +10,29 @@ const repo = AppDataSource.getRepository(Projection);
 export class ProjectionService{
 
 
+    static async getAllProjectionsOnDate(date: Date){
+        const data = await repo.find({
+            select:{
+                projectionId: true,
+                projectionDate: true,
+                startsAt: true,
+                endsAt: true,
+                updatedAt: true,
+                createdAt: true,
+                hall:{ hallId: true, name: true,projectionType: true, capacity: true, updatedAt: true },
+                movie:{ movieId: true, title: true, genre: true, releaseYear: true,description: true, image: true, mainActors: true, duration: true,startsShowing: true,updatedAt: true }
+            },
+            where:{
+                movie:{ deletedAt: IsNull() },
+                hall: { deletedAt: IsNull() },
+                projectionDate: date,
+                deletedAt: IsNull()
+            },relations: { hall: true, movie: true}
+        })
+        return checkIfDefined(data);
+    }
+
+
     static async getAllProjectionsSimple(){
         const data = await repo.find({
             select:{
@@ -153,31 +176,6 @@ export class ProjectionService{
         return overlappingProjections.length > 0;
     }
 
-
-
-
-    static async getAllProjectionsOnDate(date: Date){
-        const data = await repo.find({
-            select:{
-                projectionId: true,
-                projectionDate: true,
-                startsAt: true,
-                endsAt: true,
-                updatedAt: true,
-                hall:{ hallId: true,projectionType: true, capacity: true, updatedAt: true },
-                movie:{ movieId: true, title: true, genre: true, releaseYear: true,description: true, image: true, mainActors: true, duration: true,startsShowing: true,updatedAt: true }
-            },
-            where:{
-                movie:{ deletedAt: IsNull() },
-                hall: { deletedAt: IsNull() },
-                projectionDate: date,
-                deletedAt: IsNull()
-            },relations: { hall: true, movie: true}
-        })
-        return checkIfDefined(data);
-    }
-
-
     static async getProjectionsForMovieByDates(movieId: number){
         const data = await repo.find({
             select:{
@@ -239,6 +237,7 @@ export class ProjectionService{
     const data = await repo.find({
         select: { projectionId: true },
         where: {
+            deletedAt: IsNull(),
             projectionDate: Between(firstDayOfMonth, lastDayOfMonth)
         }
     });

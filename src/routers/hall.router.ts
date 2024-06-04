@@ -5,7 +5,7 @@ import asyncHandler from "express-async-handler"
 export const hallRouter = Router()
 
 
-hallRouter.get("/",asyncHandler(
+hallRouter.get("/all",asyncHandler(
     async (req,res) => {
         res.json(await HallService.getAllHalls())
     }

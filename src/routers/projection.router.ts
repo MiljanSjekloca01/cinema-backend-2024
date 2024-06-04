@@ -13,6 +13,7 @@ projectionRouter.get("/onDate",asyncHandler(
     async (req,res) => { 
         const stringDate = req.query.date as string
         const date = new Date(stringDate)
+        date.setHours(0,0,0,0)
         res.json(await ProjectionService.getAllProjectionsOnDate(date)) 
     }
 ))
@@ -28,7 +29,8 @@ projectionRouter.get("/movie/:id",asyncHandler(
 projectionRouter.get("/movie/:id/onDate",asyncHandler(
     async (req,res) => { 
         const stringDate = req.query.date as string
-        const date = new Date(stringDate)
+        const date = new Date(stringDate);
+        date.setHours(0,0,0,0)
         res.json(await ProjectionService.getProjectionsForMovieOnDate(+req.params.id,date)) 
     }
 ))
