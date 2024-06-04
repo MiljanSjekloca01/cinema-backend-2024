@@ -105,6 +105,30 @@ export class MovieService{
     }
 
 
+    // For Statistics Dashboard
+    static async getCurrentlyShowingMoviesNumber(){
+        const data = await repo.find({
+            select: {movieId: true},
+            where: { 
+                startsShowing: LessThanOrEqual(new Date()),
+                deletedAt: IsNull() 
+            }
+        })
+        return data.length
+    }
+
+    static async getComingSoonMoviesNumber(){
+        const data = await repo.find({
+            select:{ movieId: true},
+            where: { 
+                startsShowing: MoreThan(new Date()),
+                deletedAt: IsNull() 
+            }
+        })
+        return data.length
+    }
+
+
  
 
 

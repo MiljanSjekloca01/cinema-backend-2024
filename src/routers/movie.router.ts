@@ -33,3 +33,14 @@ movieRouter.put("/update/:id",asyncHandler(
 movieRouter.put("/delete/:id",asyncHandler(
     async (req,res) => { res.json(await MovieService.deleteMovieById(+req.params.id)) }
 ))
+
+movieRouter.get("/currently-showing/number",asyncHandler(
+    async (req,res) => { res.json(await MovieService.getCurrentlyShowingMoviesNumber()) }
+))
+
+
+movieRouter.get("/coming-soon/number",asyncHandler(
+    async (req,res) => { res.json(await MovieService.getComingSoonMoviesNumber()) }
+))
+
+

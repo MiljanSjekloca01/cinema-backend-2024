@@ -215,4 +215,82 @@ export class ProjectionService{
         return checkIfDefined(responseData);
     }
 
+
+    // Dashboard Statistic
+
+    static async getProjectionNumberForToday(){
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        const data = await repo.find({
+            select:{ projectionId: true},
+            where: {
+                projectionDate: today
+            }
+        })
+        return data.length
+    }
+
+
+    static async getProjectionNumberForThisMonth() {
+    const today = new Date();
+    const firstDayOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+    const lastDayOfMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0);
+
+    const data = await repo.find({
+        select: { projectionId: true },
+        where: {
+            projectionDate: Between(firstDayOfMonth, lastDayOfMonth)
+        }
+    });
+
+    return data.length;
+    }
+
+    static async getProjectionsCountByHallToday() {
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        const projections = await repo.find({
+            select: { hall: { hallId: true, name: true } },
+            where: { deletedAt: IsNull(),projectionDate: today},
+            relations: { hall: true }
+        });
+    
+        const hallCounts = projections.reduce((acc, curr) => {
+            if (curr.hall && curr.hall.hallId) {
+                if (!acc[curr.hall.hallId]) {
+                    acc[curr.hall.hallId] = { name: curr.hall.name, count: 0 };
+                }
+                acc[curr.hall.hallId].count++;
+            }
+            return acc;
+        }, {});
+    
+        return hallCounts;
+    }
+
+
+    static async getProjectionsCountByHallThisMonth() {
+        const today = new Date();
+        const firstDayOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+        const lastDayOfMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0);
+
+        const projections = await repo.find({
+            select: { hall: { hallId: true, name: true } },
+            where: { deletedAt: IsNull(),projectionDate: Between(firstDayOfMonth, lastDayOfMonth)},
+            relations: { hall: true }
+        });
+    
+        const hallCounts = projections.reduce((acc, curr) => {
+            if (curr.hall && curr.hall.hallId) {
+                if (!acc[curr.hall.hallId]) {
+                    acc[curr.hall.hallId] = { name: curr.hall.name, count: 0 };
+                }
+                acc[curr.hall.hallId].count++;
+            }
+            return acc;
+        }, {});
+    
+        return hallCounts;
+    }
+
 }

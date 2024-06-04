@@ -16,7 +16,8 @@ export function checkIfDefined(data: any){
 export async function authenticateToken(req : RequestModel, res: Response, next: Function) {
     
     const unprotected = [
-        "/api/admin/login","/api/admin/refresh",
+        "/api/admin/login",
+        "/api/admin/refresh",
         "/api/movie/currently-showing",
         "/api/movie/coming-soon",
     ]

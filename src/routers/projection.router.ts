@@ -51,3 +51,20 @@ projectionRouter.put("/delete/:id",asyncHandler(
     async (req,res) => { res.json(await ProjectionService.deleteProjectionById(+req.params.id)) }
 ))
 
+// Dashboard Statistics 
+
+projectionRouter.get("/today/number",asyncHandler(
+    async (req,res) => { res.json(await ProjectionService.getProjectionNumberForToday()) }
+))
+
+projectionRouter.get("/this-month/number",asyncHandler(
+    async (req,res) => { res.json(await ProjectionService.getProjectionNumberForThisMonth()) }
+))
+
+projectionRouter.get("/today/by-hall/number",asyncHandler(
+    async (req,res) => { res.json(await ProjectionService.getProjectionsCountByHallToday()) }
+))
+
+projectionRouter.get("/month/by-hall/number",asyncHandler(
+    async (req,res) => { res.json(await ProjectionService.getProjectionsCountByHallThisMonth()) }
+))
