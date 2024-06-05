@@ -214,7 +214,7 @@ export class ProjectionService{
     }
 
 
-    // Dashboard Statistic
+    // DASHBOARD STATISTICS FUNCTIONS 
 
     static async getProjectionNumberForToday(){
         const today = new Date();
