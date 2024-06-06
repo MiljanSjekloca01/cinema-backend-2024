@@ -1,4 +1,4 @@
-import { IsNull } from "typeorm";
+import { IsNull, LessThanOrEqual, MoreThanOrEqual } from "typeorm";
 import { AppDataSource } from "../db";
 import { Projection } from "../entities/Projection";
 import { checkIfDefined, checkIfModelHasData } from "../../utils";
@@ -115,6 +115,8 @@ export class ProjectionService{
     }
 
     static async createProjection(model: ProjectionModel){
+        console.log("Model",model);
+        console.log("projection",model.projectionDate)
         checkIfModelHasData(model,"hallId","movieId","startsAt","endsAt","projectionDate");
 
         const isOverlapping = await this.isOverlappingProjection(model.hallId,model.projectionDate,model.startsAt,model.endsAt)
@@ -165,11 +167,16 @@ export class ProjectionService{
 
 
     static async isOverlappingProjection(hallId: number, projectionDate: Date, startsAt: string, endsAt: string): Promise<boolean> {
+        console.log(startsAt)
+        console.log(endsAt) 
+        console.log()
         const overlappingProjections = await repo.find({
+
             // OR ili jedno ili drugo
             where: [
                 { hall: { hallId: hallId }, projectionDate: projectionDate, startsAt: Between(startsAt, endsAt), deletedAt: IsNull() },
-                { hall: { hallId: hallId }, projectionDate: projectionDate, endsAt: Between(startsAt, endsAt), deletedAt: IsNull() }
+                { hall: { hallId: hallId }, projectionDate: projectionDate, endsAt: Between(startsAt, endsAt), deletedAt: IsNull() },
+                { hall: { hallId: hallId }, projectionDate: projectionDate, startsAt: LessThanOrEqual(startsAt),endsAt: MoreThanOrEqual(endsAt) ,deletedAt: IsNull() }
             ]
         });
         console.log(overlappingProjections);
