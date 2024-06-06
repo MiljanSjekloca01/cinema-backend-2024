@@ -42,14 +42,32 @@ movieRouter.get("/:id/image", asyncHandler(async (req, res) => {
     }
 }));
 
+// Mozda izmjenjati u future
+movieRouter.delete("/:id/image", asyncHandler(async (req, res) => {
+    const movie = await MovieService.getMovieById(+req.params.id);
+    if (movie) {
+        if (movie.image) {
+            const imagePath = path.join(__dirname, '..', 'images', movie.image);
+            if (fs.existsSync(imagePath)) {
+                fs.unlinkSync(imagePath);
+                res.status(200).send('IMAGE_DELETED');
+            } else {
+                res.status(200).send('IMAGE_NOT_FOUND');
+            }
+        } else {
+            res.status(200).send('NO_IMAGE_FOR_MOVIE');
+        }
+    } else {
+        res.status(404).send('NO_SUCH_MOVIE');
+    }
+}));
+
 
 movieRouter.post("/create", upload.single('image'), asyncHandler(
     async (req, res) => {
-        console.log("IM IN CREATE")
-        console.log(req.body)
         const { title, genre, releaseYear, description, mainActors, duration, startsShowing } = req.body;
         const image = req.file?.filename;
-        console.log(image)
+   
         const genreArray = genre.split(",");
         const mainActorsArray = mainActors.split(",");
         const newMovie: MovieModel = {
@@ -68,7 +86,20 @@ movieRouter.post("/create", upload.single('image'), asyncHandler(
 ));
 
 movieRouter.put("/update/:id",asyncHandler(
-    async (req,res) => { res.json(await MovieService.updateMovieById(+req.params.id,req.body)) }
+    async (req,res) => { 
+        res.json(await MovieService.updateMovieById(+req.params.id,req.body))
+    }
+))
+
+// same as regular update just does upload of image 
+movieRouter.put("/update/:id/newImage",upload.single('image'),asyncHandler(
+    async (req,res) => { 
+        const { title, genre, releaseYear, description, mainActors, duration, startsShowing } = req.body;
+        const image = req.file?.filename;
+        const genreArray = genre.split(",");
+        const mainActorsArray = mainActors.split(",");
+        const updatedMovie: MovieModel = { title, genre: genreArray, releaseYear, description, image, mainActors: mainActorsArray, duration, startsShowing };
+        res.json(await MovieService.updateMovieById(+req.params.id,updatedMovie)) }
 ))
 
 
