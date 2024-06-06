@@ -18,13 +18,13 @@ export async function authenticateToken(req : RequestModel, res: Response, next:
     const unprotected = [
         "/api/admin/login",
         "/api/admin/refresh",
-        "/api/movie/currently-showing",
-        "/api/movie/coming-soon",
     ]
-
-    if(req.params.id){
-         unprotected.push(`/api/movie/${+req.params.id}`) 
+    
+    if(req.path.startsWith("/api/movie") || req.path.startsWith("/api/projection") || req.path.startsWith("/api/hall")){
+        unprotected.push(req.path);
     }
+
+
     
     if(unprotected.includes(req.path)){ next(); return }
 

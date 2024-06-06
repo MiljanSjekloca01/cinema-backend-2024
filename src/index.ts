@@ -8,6 +8,7 @@ import { movieRouter } from "./routers/movie.router";
 import { projectionRouter } from "./routers/projection.router";
 import { adminRouter } from "./routers/admin.router";
 import { authenticateToken } from "../utils";
+import path from "path";
 
 
 const app = express();
