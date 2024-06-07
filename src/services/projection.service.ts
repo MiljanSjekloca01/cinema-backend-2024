@@ -115,8 +115,7 @@ export class ProjectionService{
     }
 
     static async createProjection(model: ProjectionModel){
-        console.log("Model",model);
-        console.log("projection",model.projectionDate)
+     
         checkIfModelHasData(model,"hallId","movieId","startsAt","endsAt","projectionDate");
 
         const isOverlapping = await this.isOverlappingProjection(model.hallId,model.projectionDate,model.startsAt,model.endsAt)
@@ -156,9 +155,8 @@ export class ProjectionService{
 
     static async deleteProjectionById(id: number){
         const data = await this.getProjectionById(id)
-        console.log("DATA IZVUCEN IZ ID-a",data);
         data.deletedAt = new Date()
-        console.log("DATA POSLE DODAVANJA DELETED AT",data);
+
         await repo.save(data)
         return `Projection with this id: ${data.projectionId} successfully deleted`
     }
@@ -167,11 +165,7 @@ export class ProjectionService{
 
 
     static async isOverlappingProjection(hallId: number, projectionDate: Date, startsAt: string, endsAt: string): Promise<boolean> {
-        console.log(startsAt)
-        console.log(endsAt) 
-        console.log()
         const overlappingProjections = await repo.find({
-
             // OR ili jedno ili drugo
             where: [
                 { hall: { hallId: hallId }, projectionDate: projectionDate, startsAt: Between(startsAt, endsAt), deletedAt: IsNull() },
@@ -179,7 +173,6 @@ export class ProjectionService{
                 { hall: { hallId: hallId }, projectionDate: projectionDate, startsAt: LessThanOrEqual(startsAt),endsAt: MoreThanOrEqual(endsAt) ,deletedAt: IsNull() }
             ]
         });
-        console.log(overlappingProjections);
         return overlappingProjections.length > 0;
     }
 
@@ -202,9 +195,7 @@ export class ProjectionService{
         })
 
         const responseData = data.reduce( (acc,curr) => {
-            console.log(curr)
             const date = curr.projectionDate;
-            console.log(date);
             if(!acc[`${date}`]){
                 acc[`${date}`] = [];
             }
@@ -219,10 +210,7 @@ export class ProjectionService{
         },{})
         return checkIfDefined(responseData);
     }
-
-
     // DASHBOARD STATISTICS FUNCTIONS 
-
     static async getProjectionNumberForToday(){
         const today = new Date();
         today.setHours(0, 0, 0, 0);
