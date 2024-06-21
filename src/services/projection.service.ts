@@ -217,6 +217,7 @@ export class ProjectionService{
         const data = await repo.find({
             select:{ projectionId: true},
             where: {
+                deletedAt: IsNull(),
                 projectionDate: today
             }
         })

@@ -16,5 +16,4 @@ export const AppDataSource = new DataSource({
     database: process.env.DATABASE_NAME,
     entities: [Hall,Admin,Movie,Projection],
     logging: false
-
 })

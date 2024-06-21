@@ -87,7 +87,11 @@ movieRouter.post("/create", upload.single('image'), asyncHandler(
 
 movieRouter.put("/update/:id",asyncHandler(
     async (req,res) => { 
-        res.json(await MovieService.updateMovieById(+req.params.id,req.body))
+        const { title, genre, releaseYear, description, mainActors, duration, startsShowing, image } = req.body;
+        const genreArray = genre.split(",");
+        const mainActorsArray = mainActors.split(",");
+        const updatedMovie: MovieModel = { title, genre: genreArray, releaseYear, description, mainActors: mainActorsArray, duration, startsShowing, image};
+        res.json(await MovieService.updateMovieById(+req.params.id,updatedMovie))
     }
 ))
 
